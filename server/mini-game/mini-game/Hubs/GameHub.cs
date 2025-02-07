@@ -4,37 +4,49 @@ namespace Hubs
 {
     public class GameHub : Hub
     {
-        // Bảng cờ 3x3
-        private static string[] board = new string[9];
-        private static string currentPlayer = "X";
-
-        public async Task JoinGame(string gameId)
+        private static int playerCount = 0;
+        public async Task JoinGame()
         {
-            Console.WriteLine("gameId ", gameId);
-            // Gửi trạng thái ban đầu của game đến người chơi
-            await Clients.Caller.SendAsync("ReceiveBoard", board);
-            await Clients.Caller.SendAsync("ReceivePlayer", currentPlayer);
+            if (playerCount < 2)
+            {
+                if (playerCount == 0)
+                {
+                    await Clients.Caller.SendAsync("YourPlayer", "X");
+
+                }
+                else if (playerCount == 1)
+                {
+                    await Clients.Caller.SendAsync("YourPlayer", "O");
+
+                }
+                await Clients.All.SendAsync("Log", new DateTime());
+            }
+            else
+            {
+                await Clients.All.SendAsync("Log", "Full users over 2 players");
+            }
+            playerCount++;
+
         }
 
-        public async Task Log(string date)
+        public async Task Log(string message)
         {
-            await Clients.All.SendAsync("Log", date);
+            await Clients.All.SendAsync("Log", message);
 
         }
 
-        public async Task MakeMove(int index, string player)
+        public override async Task OnDisconnectedAsync(Exception? exception)
         {
-            // Kiểm tra người chơi có đúng lượt không
-            if (player != currentPlayer)
-                return;
+            Console.WriteLine($"Client {Context.ConnectionId} disconnected!");
 
-            // Cập nhật bảng cờ
-            board[index] = player;
-            currentPlayer = (player == "X") ? "O" : "X";
+            if (exception != null)
+            {
+                Console.WriteLine($"Error: {exception.Message}");
+            }
+            playerCount--;
+            await Clients.All.SendAsync("Log", "Player count " + playerCount);
 
-            // Gửi trạng thái game đến tất cả người chơi
-            await Clients.All.SendAsync("ReceiveBoard", board);
-            await Clients.All.SendAsync("ReceivePlayer", currentPlayer);
+            await base.OnDisconnectedAsync(exception);
         }
     }
 }

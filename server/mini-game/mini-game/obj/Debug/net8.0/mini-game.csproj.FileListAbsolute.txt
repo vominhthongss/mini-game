@@ -30,3 +30,12 @@
 /Users/minhthong/code/game/mini-game/server/mini-game/mini-game/obj/Debug/net8.0/mini-game.pdb
 /Users/minhthong/code/game/mini-game/server/mini-game/mini-game/obj/Debug/net8.0/mini-game.genruntimeconfig.cache
 /Users/minhthong/code/game/mini-game/server/mini-game/mini-game/obj/Debug/net8.0/ref/mini-game.dll
+/Users/minhthong/code/game/mini-game/server/mini-game/mini-game/bin/Debug/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
+/Users/minhthong/code/game/mini-game/server/mini-game/mini-game/bin/Debug/net8.0/Microsoft.Extensions.Diagnostics.Abstractions.dll
+/Users/minhthong/code/game/mini-game/server/mini-game/mini-game/bin/Debug/net8.0/Microsoft.Extensions.Hosting.Abstractions.dll
+/Users/minhthong/code/game/mini-game/server/mini-game/mini-game/bin/Debug/net8.0/Microsoft.Extensions.Logging.Abstractions.dll
+/Users/minhthong/code/game/mini-game/server/mini-game/mini-game/bin/Debug/net8.0/Microsoft.Extensions.ObjectPool.dll
+/Users/minhthong/code/game/mini-game/server/mini-game/mini-game/bin/Debug/net8.0/Microsoft.Extensions.Options.dll
+/Users/minhthong/code/game/mini-game/server/mini-game/mini-game/bin/Debug/net8.0/Newtonsoft.Json.dll
+/Users/minhthong/code/game/mini-game/server/mini-game/mini-game/bin/Debug/net8.0/System.Net.WebSockets.WebSocketProtocol.dll
+/Users/minhthong/code/game/mini-game/server/mini-game/mini-game/obj/Debug/net8.0/mini-game.sourcelink.json

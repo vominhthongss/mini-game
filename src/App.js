@@ -12,6 +12,7 @@ function App() {
 
   const size = 10;
   const [lines, setLines] = useState(createArray(size, size));
+  const [playerTurn, setPlayerTurn] = useState("");
 
   const handleOutput = (row, col) => {
     const newLines = [...lines];
@@ -19,7 +20,7 @@ function App() {
     setLines(newLines);
     handleMakeMove(lines);
   };
-  useEffect(() => {}, [lines]);
+  useEffect(() => {}, [lines, playerTurn]);
   useEffect(() => {
     const newConnection = new HubConnectionBuilder()
       .withUrl("https://localhost:7294/gameHub", {
@@ -47,9 +48,10 @@ function App() {
       setMessages((prevMessages) => [...prevMessages, message]);
     });
 
-    newConnection.on("MakeMove", (board) => {
-      const newLines = [...JSON.parse(board)];
+    newConnection.on("MakeMove", (_board, _playerTurn) => {
+      const newLines = [...JSON.parse(_board)];
       setLines(newLines);
+      setPlayerTurn(_playerTurn);
     });
 
     setConnection(newConnection);
@@ -68,18 +70,22 @@ function App() {
   const handleMakeMove = (data) => {
     if (connection) {
       connection
-        .invoke("MakeMove", JSON.stringify(data))
+        .invoke("MakeMove", JSON.stringify(data), playerTurn)
         .catch((err) => console.error(err));
     }
   };
 
   return (
     <div className="w-[100%] h-full flex flex-row">
-      <div className="w-[80%] border h-screen overflow-scroll flex justify-center items-center">
+      <div className="relative w-[80%] border h-screen overflow-scroll flex justify-center items-center">
+        <span className="absolute top-0 left-0 ">
+          Người đánh tiếp theo: {playerTurn}
+        </span>
         <Board
           key={JSON.stringify(lines)}
           initialLines={lines}
           player={player}
+          playerTurn={playerTurn}
           handleOutput={handleOutput}
         />
       </div>

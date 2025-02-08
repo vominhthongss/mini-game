@@ -6,7 +6,7 @@ namespace Hubs
     {
         private static Dictionary<string, string> player = new Dictionary<string, string> { { "X", "" }, { "O", "" } };
 
-        private static Dictionary<string, string> game = new Dictionary<string, string> { { "board", "" } };
+        private static Dictionary<string, string> game = new Dictionary<string, string> { { "board", "" }, { "playerTurn", "X" } };
 
         public async Task JoinGame()
         {
@@ -15,14 +15,14 @@ namespace Hubs
                 player["X"] = Context.ConnectionId;
                 await Clients.Caller.SendAsync("YourPlayer", "X");
 
-                await Clients.All.SendAsync("MakeMove", game["board"]);
+                await Clients.All.SendAsync("MakeMove", game["board"], game["playerTurn"]);
 
             }
             else if (player["O"] == "")
             {
                 player["O"] = Context.ConnectionId;
                 await Clients.Caller.SendAsync("YourPlayer", "O");
-                await Clients.All.SendAsync("MakeMove", game["board"]);
+                await Clients.All.SendAsync("MakeMove", game["board"], game["playerTurn"]);
             }
             else
             {
@@ -37,10 +37,11 @@ namespace Hubs
         {
             await Clients.All.SendAsync("Log", message);
         }
-        public async Task MakeMove(string board)
+        public async Task MakeMove(string board, string playerTurn)
         {
             game["board"] = board;
-            await Clients.All.SendAsync("MakeMove", board);
+            game["playerTurn"] = playerTurn == "X" ? "O" : "X";
+            await Clients.All.SendAsync("MakeMove", game["board"], game["playerTurn"]);
         }
         public async Task PlayerTurn(string player)
         {

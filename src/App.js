@@ -38,10 +38,10 @@ function App() {
 
     newConnection.on("YourPlayer", (player) => {
       setPlayer(player);
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        `Bạn là người chơi ${player}`,
-      ]);
+      // setMessages((prevMessages) => [
+      //   ...prevMessages,
+      //   `Bạn là người chơi ${player}`,
+      // ]);
     });
 
     newConnection.on("Log", (message) => {
@@ -67,6 +67,17 @@ function App() {
     }
   }, [messages]);
 
+  const showName = (text) => {
+    return (
+      <span
+        className={`font-bold ${
+          text === "X" ? "text-red-500" : "text-blue-500"
+        }`}>
+        {" "}
+        {text}
+      </span>
+    );
+  };
   const handleMakeMove = (data) => {
     if (connection) {
       connection
@@ -77,10 +88,7 @@ function App() {
 
   return (
     <div className="w-[100%] h-full flex flex-row">
-      <div className="relative w-[80%] border h-screen overflow-scroll flex justify-center items-center">
-        <span className="absolute top-0 left-0 ">
-          Người đánh tiếp theo: {playerTurn}
-        </span>
+      <div className="w-[80%] border h-screen overflow-scroll flex justify-center items-center">
         <Board
           key={JSON.stringify(lines)}
           initialLines={lines}
@@ -90,6 +98,8 @@ function App() {
         />
       </div>
       <div className="fixed right-0 top-0 bg-purple-200 w-[20%] h-screen flex flex-col space-y-2 p-2 overflow-auto">
+        <span>Người đánh tiếp theo: {showName(playerTurn)}</span>
+        <span>Bạn là người chơi: {showName(player)}</span>
         {messages.map((msg, index) => (
           <div key={index} className="p-1 border-b">
             {msg}

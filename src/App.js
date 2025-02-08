@@ -89,7 +89,7 @@ function App() {
   const handleMakeMove = (data) => {
     if (connection) {
       connection
-        .invoke("MakeMove", JSON.stringify(data), playerTurn, "")
+        .invoke("MakeMove", JSON.stringify(data), playerTurn, winner)
         .catch((err) => console.error(err));
     }
   };

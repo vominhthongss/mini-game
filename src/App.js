@@ -89,7 +89,7 @@ function App() {
   const handleMakeMove = (data) => {
     if (connection) {
       connection
-        .invoke("MakeMove", JSON.stringify(data), playerTurn, winner)
+        .invoke("MakeMove", JSON.stringify(data), playerTurn, "")
         .catch((err) => console.error(err));
     }
   };
@@ -107,6 +107,7 @@ function App() {
           initialLines={lines}
           player={player}
           playerTurn={playerTurn}
+          winner={winner}
           handleOutput={handleOutput}
         />
       </div>

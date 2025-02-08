@@ -1,10 +1,13 @@
 import { useState } from "react";
 
-function Board({ initialLines, player, handleOutput, playerTurn }) {
+function Board({ initialLines, player, handleOutput, playerTurn, winner }) {
   const [lines, setLines] = useState(initialLines);
   const cellSize = 50;
 
   const handleMove = (row, col) => {
+    if (winner) {
+      return;
+    }
     if (player === playerTurn) {
       const newLines = [...lines];
       newLines[row][col] = player;

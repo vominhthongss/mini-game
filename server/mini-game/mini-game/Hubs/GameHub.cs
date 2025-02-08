@@ -6,7 +6,7 @@ namespace Hubs
     {
         private static Dictionary<string, string> player = new Dictionary<string, string> { { "X", "" }, { "O", "" } };
 
-        private static Dictionary<string, string> game = new Dictionary<string, string> { { "board", "" }, { "playerTurn", "X" } };
+        private static Dictionary<string, string> game = new Dictionary<string, string> { { "board", "" }, { "playerTurn", "X" }, { "winner", "" } };
 
         public async Task JoinGame()
         {

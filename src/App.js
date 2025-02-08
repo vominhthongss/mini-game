@@ -159,7 +159,9 @@ function App() {
     <div className="w-[100%] h-full flex lg:flex-row flex-col">
       <div className="lg:fixed lg:right-0 lg:top-0 bg-purple-200 lg:w-[20%] w-full lg:h-screen flex flex-col space-y-2 p-2 overflow-auto">
         <span>Người đánh tiếp theo: {showName(playerTurn)}</span>
-        <span>Bạn là người chơi: {showName(player)}</span>
+        <span>
+          Bạn là người chơi: {player ? showName(player) : "Đang kết nối..."}
+        </span>
         <span>Người thắng: {winner ? showName(winner) : "Chưa có"}</span>
         <button
           className="border bg-gray-200 hover:bg-white cursor-pointer"

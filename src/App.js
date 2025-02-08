@@ -13,6 +13,7 @@ function App() {
   const size = 10;
   const [lines, setLines] = useState(createArray(size, size));
   const [playerTurn, setPlayerTurn] = useState("X");
+  const [winner, setWinner] = useState("");
 
   const handleOutput = (row, col) => {
     const newLines = [...lines];
@@ -48,10 +49,11 @@ function App() {
       setMessages((prevMessages) => [...prevMessages, message]);
     });
 
-    newConnection.on("MakeMove", (_board, _playerTurn) => {
+    newConnection.on("MakeMove", (_board, _playerTurn, _winner) => {
       const newLines = [...JSON.parse(_board)];
       setLines(newLines);
       setPlayerTurn(_playerTurn);
+      setWinner(_winner);
     });
 
     newConnection.on("NewGame", () => {
@@ -87,7 +89,7 @@ function App() {
   const handleMakeMove = (data) => {
     if (connection) {
       connection
-        .invoke("MakeMove", JSON.stringify(data), playerTurn)
+        .invoke("MakeMove", JSON.stringify(data), playerTurn, winner)
         .catch((err) => console.error(err));
     }
   };
@@ -111,6 +113,7 @@ function App() {
       <div className="fixed right-0 top-0 bg-purple-200 w-[20%] h-screen flex flex-col space-y-2 p-2 overflow-auto">
         <span>Người đánh tiếp theo: {showName(playerTurn)}</span>
         <span>Bạn là người chơi: {showName(player)}</span>
+        <span>Người thắng: {winner ? showName(winner) : "Chưa có"}</span>
         <button
           className="border bg-gray-200 hover:bg-white cursor-pointer"
           onClick={handleNewGame}>

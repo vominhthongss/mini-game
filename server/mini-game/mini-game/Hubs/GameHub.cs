@@ -15,14 +15,14 @@ namespace Hubs
                 player["X"] = Context.ConnectionId;
                 await Clients.Caller.SendAsync("YourPlayer", "X");
 
-                await Clients.All.SendAsync("MakeMove", game["board"], game["playerTurn"]);
+                await Clients.All.SendAsync("MakeMove", game["board"], game["playerTurn"], game["winner"]);
 
             }
             else if (player["O"] == "")
             {
                 player["O"] = Context.ConnectionId;
                 await Clients.Caller.SendAsync("YourPlayer", "O");
-                await Clients.All.SendAsync("MakeMove", game["board"], game["playerTurn"]);
+                await Clients.All.SendAsync("MakeMove", game["board"], game["playerTurn"], game["winner"]);
             }
             else
             {
@@ -37,17 +37,19 @@ namespace Hubs
         {
             await Clients.All.SendAsync("Log", message);
         }
-        public async Task MakeMove(string board, string playerTurn)
+        public async Task MakeMove(string board, string playerTurn, string winner)
         {
             game["board"] = board;
             game["playerTurn"] = playerTurn == "X" ? "O" : "X";
-            await Clients.All.SendAsync("MakeMove", game["board"], game["playerTurn"]);
+            game["winner"] = winner;
+            await Clients.All.SendAsync("MakeMove", game["board"], game["playerTurn"], game["winner"]);
         }
 
         public async Task NewGame()
         {
             game["board"] = "";
             game["playerTurn"] = "X";
+            game["winner"] = "";
             await Clients.All.SendAsync("NewGame");
         }
         public async Task PlayerTurn(string player)

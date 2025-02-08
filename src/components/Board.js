@@ -1,6 +1,13 @@
 import { useState } from "react";
 
-function Board({ initialLines, player, handleOutput, playerTurn, winner }) {
+function Board({
+  initialLines,
+  player,
+  handleOutput,
+  playerTurn,
+  winner,
+  newPosition,
+}) {
   const [lines, setLines] = useState(initialLines);
   const cellSize = 30;
 
@@ -25,6 +32,10 @@ function Board({ initialLines, player, handleOutput, playerTurn, winner }) {
             ? "text-red-500 font-bold text-md"
             : cell === "O"
             ? "text-blue-500 font-bold text-md"
+            : ""
+        } ${
+          newPosition.row === row && newPosition.col === col
+            ? "!border-green-500 animate-pulse"
             : ""
         } bg-gray-200 hover:bg-white cursor-pointer border-2 border-black min-w-[${cellSize}px] h-[${cellSize}px] flex justify-center items-center`}>
         {cell}

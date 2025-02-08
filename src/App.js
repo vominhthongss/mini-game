@@ -16,14 +16,17 @@ function App() {
   const [lines, setLines] = useState(createArray(size, size));
   const [playerTurn, setPlayerTurn] = useState("X");
   const [winner, setWinner] = useState("");
+  const [newPosition, setNewPosition] = useState({ row: null, col: null });
 
   const handleOutput = (row, col) => {
     const newLines = [...lines];
     newLines[row][col] = player;
+    const newPo = { row: row, col: col };
     setLines(newLines);
-    handleMakeMove(lines);
+    handleMakeMove(lines, newPo);
   };
-  useEffect(() => {}, [lines, playerTurn]);
+
+  // useEffect(() => {}, [lines, playerTurn, newPosition]);
   useEffect(() => {
     const newConnection = new HubConnectionBuilder()
       .withUrl(`${REACT_APP_API_URL}gameHub`, {
@@ -41,28 +44,30 @@ function App() {
 
     newConnection.on("YourPlayer", (player) => {
       setPlayer(player);
-      // setMessages((prevMessages) => [
-      //   ...prevMessages,
-      //   `Bạn là người chơi ${player}`,
-      // ]);
     });
 
     newConnection.on("Log", (message) => {
       setMessages((prevMessages) => [...prevMessages, message]);
     });
 
-    newConnection.on("MakeMove", (_board, _playerTurn, _winner) => {
-      const newLines = [...JSON.parse(_board)];
-      setLines(newLines);
-      setPlayerTurn(_playerTurn);
-      setWinner(_winner);
-    });
+    newConnection.on(
+      "MakeMove",
+      (_board, _playerTurn, _winner, _newPosition) => {
+        const newLines = [...JSON.parse(_board)];
+        setLines(newLines);
+        setPlayerTurn(_playerTurn);
+        setWinner(_winner);
+        const newPostion_ = JSON.parse(_newPosition);
+        setNewPosition(newPostion_);
+      }
+    );
 
     newConnection.on("NewGame", () => {
       const newLines = [...createArray(size, size)];
       setLines(newLines);
       setPlayerTurn("X");
       setWinner("");
+      setNewPosition({ row: null, col: null });
     });
 
     setConnection(newConnection);
@@ -89,14 +94,20 @@ function App() {
       </span>
     );
   };
-  const handleMakeMove = (data) => {
+  const handleMakeMove = (data, newPo) => {
     const winner = checkWinner(data);
     if (winner) {
       setWinner(winner);
     }
     if (connection) {
       connection
-        .invoke("MakeMove", JSON.stringify(data), playerTurn, winner)
+        .invoke(
+          "MakeMove",
+          JSON.stringify(data),
+          playerTurn,
+          winner,
+          JSON.stringify(newPo)
+        )
         .catch((err) => console.error(err));
     }
   };
@@ -182,6 +193,7 @@ function App() {
           player={player}
           playerTurn={playerTurn}
           winner={winner}
+          newPosition={newPosition}
           handleOutput={handleOutput}
         />
       </div>

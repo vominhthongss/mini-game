@@ -6,7 +6,7 @@ namespace Hubs
     {
         private static Dictionary<string, string> player = new Dictionary<string, string> { { "X", "" }, { "O", "" } };
 
-        private static Dictionary<string, string> game = new Dictionary<string, string> { { "board", "" }, { "playerTurn", "X" }, { "winner", "" } };
+        private static Dictionary<string, string> game = new Dictionary<string, string> { { "board", "" }, { "playerTurn", "X" }, { "winner", "" },{ "newPosition", "" } };
 
         public async Task JoinGame()
         {
@@ -15,14 +15,14 @@ namespace Hubs
                 player["X"] = Context.ConnectionId;
                 await Clients.Caller.SendAsync("YourPlayer", "X");
 
-                await Clients.All.SendAsync("MakeMove", game["board"], game["playerTurn"], game["winner"]);
+                await Clients.All.SendAsync("MakeMove", game["board"], game["playerTurn"], game["winner"], game["newPosition"]);
 
             }
             else if (player["O"] == "")
             {
                 player["O"] = Context.ConnectionId;
                 await Clients.Caller.SendAsync("YourPlayer", "O");
-                await Clients.All.SendAsync("MakeMove", game["board"], game["playerTurn"], game["winner"]);
+                await Clients.All.SendAsync("MakeMove", game["board"], game["playerTurn"], game["winner"], game["newPosition"]);
             }
             else
             {
@@ -37,12 +37,13 @@ namespace Hubs
         {
             await Clients.All.SendAsync("Log", message);
         }
-        public async Task MakeMove(string board, string playerTurn, string winner)
+        public async Task MakeMove(string board, string playerTurn, string winner, string newPosition)
         {
             game["board"] = board;
             game["playerTurn"] = playerTurn == "X" ? "O" : "X";
             game["winner"] = winner;
-            await Clients.All.SendAsync("MakeMove", game["board"], game["playerTurn"], game["winner"]);
+            game["newPosition"] = newPosition;
+            await Clients.All.SendAsync("MakeMove", game["board"], game["playerTurn"], game["winner"], game["newPosition"]);
         }
 
         public async Task NewGame()
@@ -50,6 +51,7 @@ namespace Hubs
             game["board"] = "";
             game["playerTurn"] = "X";
             game["winner"] = "";
+            game["newPosition"] = "";
             await Clients.All.SendAsync("NewGame");
         }
         public async Task PlayerTurn(string player)

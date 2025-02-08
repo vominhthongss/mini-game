@@ -12,7 +12,7 @@ function App() {
 
   const size = 10;
   const [lines, setLines] = useState(createArray(size, size));
-  const [playerTurn, setPlayerTurn] = useState("");
+  const [playerTurn, setPlayerTurn] = useState("X");
 
   const handleOutput = (row, col) => {
     const newLines = [...lines];
@@ -54,6 +54,12 @@ function App() {
       setPlayerTurn(_playerTurn);
     });
 
+    newConnection.on("NewGame", () => {
+      const newLines = [...createArray(size, size)];
+      setLines(newLines);
+      setPlayerTurn("X");
+    });
+
     setConnection(newConnection);
 
     return () => {
@@ -85,6 +91,11 @@ function App() {
         .catch((err) => console.error(err));
     }
   };
+  const handleNewGame = () => {
+    if (connection) {
+      connection.invoke("NewGame").catch((err) => console.error(err));
+    }
+  };
 
   return (
     <div className="w-[100%] h-full flex flex-row">
@@ -100,6 +111,11 @@ function App() {
       <div className="fixed right-0 top-0 bg-purple-200 w-[20%] h-screen flex flex-col space-y-2 p-2 overflow-auto">
         <span>Người đánh tiếp theo: {showName(playerTurn)}</span>
         <span>Bạn là người chơi: {showName(player)}</span>
+        <button
+          className="border bg-gray-200 hover:bg-white cursor-pointer"
+          onClick={handleNewGame}>
+          Chơi game mới
+        </button>
         {messages.map((msg, index) => (
           <div key={index} className="p-1 border-b">
             {msg}

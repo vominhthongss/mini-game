@@ -43,6 +43,13 @@ namespace Hubs
             game["playerTurn"] = playerTurn == "X" ? "O" : "X";
             await Clients.All.SendAsync("MakeMove", game["board"], game["playerTurn"]);
         }
+
+        public async Task NewGame()
+        {
+            game["board"] = "";
+            game["playerTurn"] = "X";
+            await Clients.All.SendAsync("NewGame");
+        }
         public async Task PlayerTurn(string player)
         {
             await Clients.All.SendAsync("PlayerTurn", player);

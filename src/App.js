@@ -5,6 +5,8 @@ import Board from "./components/Board";
 import { createArray } from "./constant/arr";
 
 function App() {
+  const { REACT_APP_API_URL } = process.env;
+
   const [connection, setConnection] = useState(null);
   const [player, setPlayer] = useState("");
   const [messages, setMessages] = useState([]);
@@ -24,7 +26,7 @@ function App() {
   useEffect(() => {}, [lines, playerTurn]);
   useEffect(() => {
     const newConnection = new HubConnectionBuilder()
-      .withUrl("https://localhost:7294/gameHub", {
+      .withUrl(`${REACT_APP_API_URL}gameHub`, {
         withCredentials: true,
       })
       .build();

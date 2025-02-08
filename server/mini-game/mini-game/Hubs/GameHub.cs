@@ -6,6 +6,8 @@ namespace Hubs
     {
         private static Dictionary<string, string> player = new Dictionary<string, string> { { "X", "" }, { "O", "" } };
 
+        private static Dictionary<string, string> game = new Dictionary<string, string> { { "board", "" } };
+
         public async Task JoinGame()
         {
             if (player["X"] == "")
@@ -13,11 +15,14 @@ namespace Hubs
                 player["X"] = Context.ConnectionId;
                 await Clients.Caller.SendAsync("YourPlayer", "X");
 
+                await Clients.All.SendAsync("MakeMove", game["board"]);
+
             }
             else if (player["O"] == "")
             {
                 player["O"] = Context.ConnectionId;
                 await Clients.Caller.SendAsync("YourPlayer", "O");
+                await Clients.All.SendAsync("MakeMove", game["board"]);
             }
             else
             {
@@ -34,7 +39,12 @@ namespace Hubs
         }
         public async Task MakeMove(string board)
         {
+            game["board"] = board;
             await Clients.All.SendAsync("MakeMove", board);
+        }
+        public async Task PlayerTurn(string player)
+        {
+            await Clients.All.SendAsync("PlayerTurn", player);
         }
 
         public override async Task OnDisconnectedAsync(Exception? exception)

@@ -9,7 +9,7 @@ function Board({
   newPosition,
 }) {
   const [lines, setLines] = useState(initialLines);
-  const cellSize = 30;
+  const cellSize = 40;
 
   const handleMove = (row, col) => {
     if (winner) {
@@ -29,9 +29,9 @@ function Board({
         key={col}
         className={`${
           cell === "X"
-            ? "text-red-500 font-bold text-md"
+            ? "text-red-500 font-bold text-3xl"
             : cell === "O"
-            ? "text-blue-500 font-bold text-md"
+            ? "text-blue-500 font-bold text-3xl"
             : ""
         } ${
           newPosition.row === row && newPosition.col === col

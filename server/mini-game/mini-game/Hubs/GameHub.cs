@@ -4,28 +4,27 @@ namespace Hubs
 {
     public class GameHub : Hub
     {
-        private static int playerCount = 0;
+        private static Dictionary<string, string> player = new Dictionary<string, string> { {"X","" }, { "O", "" } };
+        
         public async Task JoinGame()
         {
-            if (playerCount < 2)
-            {
-                if (playerCount == 0)
+                if (player["X"] == "")
                 {
+                    player["X"] = Context.ConnectionId;
                     await Clients.Caller.SendAsync("YourPlayer", "X");
 
                 }
-                else if (playerCount == 1)
+                else if (player["O"] == "")
                 {
+                    player["O"] = Context.ConnectionId;
                     await Clients.Caller.SendAsync("YourPlayer", "O");
-
-                }
-                await Clients.All.SendAsync("Log", "Kết nối thành công !");
-            }
+               }
             else
             {
+                await Clients.All.SendAsync("Log", "Kết nối thành công !");
                 await Clients.All.SendAsync("Log", "Đủ 2 người rồi :D");
             }
-            playerCount++;
+            await Clients.All.SendAsync("Log", "player X " + player["X"]+" và "+ "player O " + player["O"]);
 
         }
 
@@ -43,8 +42,14 @@ namespace Hubs
             {
                 Console.WriteLine($"Error: {exception.Message}");
             }
-            playerCount--;
-            await Clients.All.SendAsync("Log", "Player count " + playerCount);
+            if (player["X"] == Context.ConnectionId)
+            {
+                player["X"] = "";
+            }
+            if (player["O"] == Context.ConnectionId)
+            {
+                player["O"] = "";
+            }
 
             await base.OnDisconnectedAsync(exception);
         }

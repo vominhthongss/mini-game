@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { HubConnectionBuilder } from "@microsoft/signalr";
 import "./App.css";
+import Board from "./components/Board";
+import { createArray } from "./constant/arr";
 
 function App() {
   const [connection, setConnection] = useState(null);
@@ -8,6 +10,11 @@ function App() {
   const [messages, setMessages] = useState([]);
   const messagesEndRef = useRef(null);
 
+  const size = 10;
+  const lines = createArray(size, size);
+  const handleOutput = (row, col) => {
+    lines[row][col] = player;
+  };
   useEffect(() => {
     const newConnection = new HubConnectionBuilder()
       .withUrl("https://localhost:7294/gameHub", {
@@ -58,12 +65,14 @@ function App() {
 
   return (
     <div className="w-[100%] h-full flex flex-row">
-      <div className="w-[80%]">
-        <button className="border rounded-md p-2 bg-white" onClick={handleTest}>
-          test
-        </button>
+      <div className="w-[80%] border h-screen overflow-scroll flex justify-center items-center">
+        <Board
+          initialLines={lines}
+          player={player}
+          handleOutput={handleOutput}
+        />
       </div>
-      <div className="w-[20%] h-screen border-l flex flex-col space-y-2 p-2 overflow-auto">
+      <div className="fixed right-0 top-0 bg-purple-200 w-[20%] h-screen flex flex-col space-y-2 p-2 overflow-auto">
         {messages.map((msg, index) => (
           <div key={index} className="p-1 border-b">
             {msg}

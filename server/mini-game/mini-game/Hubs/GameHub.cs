@@ -19,11 +19,11 @@ namespace Hubs
                     await Clients.Caller.SendAsync("YourPlayer", "O");
 
                 }
-                await Clients.All.SendAsync("Log", new DateTime());
+                await Clients.All.SendAsync("Log", "Kết nối thành công !");
             }
             else
             {
-                await Clients.All.SendAsync("Log", "Full users over 2 players");
+                await Clients.All.SendAsync("Log", "Đủ 2 người rồi :D");
             }
             playerCount++;
 

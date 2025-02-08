@@ -16,9 +16,9 @@ function Board({ initialLines, player, handleOutput }) {
         onClick={() => handleMove(row, col)}
         key={col}
         className={`${
-          player === "X"
+          cell === "X"
             ? "text-red-500 font-bold text-md"
-            : player === "O"
+            : cell === "O"
             ? "text-blue-500 font-bold text-md"
             : ""
         } bg-gray-200 hover:bg-white cursor-pointer border-2 border-black min-w-[${cellSize}px] h-[${cellSize}px] flex justify-center items-center`}>

@@ -11,10 +11,15 @@ function App() {
   const messagesEndRef = useRef(null);
 
   const size = 10;
-  const lines = createArray(size, size);
+  const [lines, setLines] = useState(createArray(size, size));
+
   const handleOutput = (row, col) => {
-    lines[row][col] = player;
+    const newLines = [...lines];
+    newLines[row][col] = player;
+    setLines(newLines);
+    handleMakeMove(lines);
   };
+  useEffect(() => {}, [lines]);
   useEffect(() => {
     const newConnection = new HubConnectionBuilder()
       .withUrl("https://localhost:7294/gameHub", {
@@ -42,6 +47,11 @@ function App() {
       setMessages((prevMessages) => [...prevMessages, message]);
     });
 
+    newConnection.on("MakeMove", (board) => {
+      const newLines = [...JSON.parse(board)];
+      setLines(newLines);
+    });
+
     setConnection(newConnection);
 
     return () => {
@@ -55,10 +65,10 @@ function App() {
     }
   }, [messages]);
 
-  const handleTest = () => {
+  const handleMakeMove = (data) => {
     if (connection) {
       connection
-        .invoke("Log", `${player} vừa đi`)
+        .invoke("MakeMove", JSON.stringify(data))
         .catch((err) => console.error(err));
     }
   };
@@ -67,6 +77,7 @@ function App() {
     <div className="w-[100%] h-full flex flex-row">
       <div className="w-[80%] border h-screen overflow-scroll flex justify-center items-center">
         <Board
+          key={JSON.stringify(lines)}
           initialLines={lines}
           player={player}
           handleOutput={handleOutput}

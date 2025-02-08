@@ -10,7 +10,7 @@ function App() {
   const [messages, setMessages] = useState([]);
   const messagesEndRef = useRef(null);
 
-  const size = 10;
+  const size = 20;
   const [lines, setLines] = useState(createArray(size, size));
   const [playerTurn, setPlayerTurn] = useState("X");
   const [winner, setWinner] = useState("");
@@ -100,18 +100,8 @@ function App() {
   };
 
   return (
-    <div className="w-[100%] h-full flex flex-row">
-      <div className="w-[80%] border h-screen overflow-scroll flex justify-center items-center">
-        <Board
-          key={JSON.stringify(lines)}
-          initialLines={lines}
-          player={player}
-          playerTurn={playerTurn}
-          winner={winner}
-          handleOutput={handleOutput}
-        />
-      </div>
-      <div className="fixed right-0 top-0 bg-purple-200 w-[20%] h-screen flex flex-col space-y-2 p-2 overflow-auto">
+    <div className="w-[100%] h-full flex lg:flex-row flex-col">
+      <div className="lg:fixed lg:right-0 lg:top-0 bg-purple-200 lg:w-[20%] w-full lg:h-screen flex flex-col space-y-2 p-2 overflow-auto">
         <span>Người đánh tiếp theo: {showName(playerTurn)}</span>
         <span>Bạn là người chơi: {showName(player)}</span>
         <span>Người thắng: {winner ? showName(winner) : "Chưa có"}</span>
@@ -120,12 +110,22 @@ function App() {
           onClick={handleNewGame}>
           Chơi game mới
         </button>
-        {messages.map((msg, index) => (
+        {/* {messages.map((msg, index) => (
           <div key={index} className="p-1 border-b">
             {msg}
           </div>
-        ))}
+        ))} */}
         <div ref={messagesEndRef} />
+      </div>
+      <div className="lg:w-[80%] w-full border lg:h-screen overflow-scroll flex justify-center items-center">
+        <Board
+          key={JSON.stringify(lines)}
+          initialLines={lines}
+          player={player}
+          playerTurn={playerTurn}
+          winner={winner}
+          handleOutput={handleOutput}
+        />
       </div>
     </div>
   );

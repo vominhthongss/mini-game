@@ -2,7 +2,7 @@ import { useState } from "react";
 
 function Board({ initialLines, player, handleOutput, playerTurn, winner }) {
   const [lines, setLines] = useState(initialLines);
-  const cellSize = 50;
+  const cellSize = 30;
 
   const handleMove = (row, col) => {
     if (winner) {

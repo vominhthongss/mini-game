@@ -6,7 +6,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", policy =>
     {
-        policy.WithOrigins("http://localhost:3000", "http://192.168.0.60:3000")
+        policy.WithOrigins("http://localhost:3000", "http://192.168.0.60:3000", "https://mini-game-rho.vercel.app")
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();

@@ -60,6 +60,7 @@ function App() {
       const newLines = [...createArray(size, size)];
       setLines(newLines);
       setPlayerTurn("X");
+      setWinner("");
     });
 
     setConnection(newConnection);
@@ -87,6 +88,10 @@ function App() {
     );
   };
   const handleMakeMove = (data) => {
+    const winner = checkWinner(data);
+    if (winner) {
+      setWinner(winner);
+    }
     if (connection) {
       connection
         .invoke("MakeMove", JSON.stringify(data), playerTurn, winner)
@@ -98,7 +103,56 @@ function App() {
       connection.invoke("NewGame").catch((err) => console.error(err));
     }
   };
+  const checkWinner = (board) => {
+    const size = board.length;
 
+    // Kiểm tra hàng ngang
+    for (let i = 0; i < size; i++) {
+      for (let j = 0; j <= size - 5; j++) {
+        const row = board[i].slice(j, j + 5);
+        if (row.every((cell) => cell === "X")) return "X";
+        if (row.every((cell) => cell === "O")) return "O";
+      }
+    }
+
+    // Kiểm tra hàng dọc
+    for (let j = 0; j < size; j++) {
+      for (let i = 0; i <= size - 5; i++) {
+        const col = [];
+        for (let k = 0; k < 5; k++) {
+          col.push(board[i + k][j]);
+        }
+        if (col.every((cell) => cell === "X")) return "X";
+        if (col.every((cell) => cell === "O")) return "O";
+      }
+    }
+
+    // Kiểm tra đường chéo chính (từ trên trái xuống dưới phải)
+    for (let i = 0; i <= size - 5; i++) {
+      for (let j = 0; j <= size - 5; j++) {
+        const diag = [];
+        for (let k = 0; k < 5; k++) {
+          diag.push(board[i + k][j + k]);
+        }
+        if (diag.every((cell) => cell === "X")) return "X";
+        if (diag.every((cell) => cell === "O")) return "O";
+      }
+    }
+
+    // Kiểm tra đường chéo phụ (từ trên phải xuống dưới trái)
+    for (let i = 0; i <= size - 5; i++) {
+      for (let j = 4; j < size; j++) {
+        const diag = [];
+        for (let k = 0; k < 5; k++) {
+          diag.push(board[i + k][j - k]);
+        }
+        if (diag.every((cell) => cell === "X")) return "X";
+        if (diag.every((cell) => cell === "O")) return "O";
+      }
+    }
+
+    return null; // Không có người thắng
+  };
   return (
     <div className="w-[100%] h-full flex lg:flex-row flex-col">
       <div className="lg:fixed lg:right-0 lg:top-0 bg-purple-200 lg:w-[20%] w-full lg:h-screen flex flex-col space-y-2 p-2 overflow-auto">
